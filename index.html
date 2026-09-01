@@ -67,6 +67,14 @@
     margin:0 0 28px;
     text-wrap:pretty;
   }
+  h1 .highlight{
+    display:inline;
+    background:var(--sw-accent);
+    color:var(--sw-fg);
+    padding:0.05em 0.15em;
+    -webkit-box-decoration-break:clone;
+    box-decoration-break:clone;
+  }
   .lede{
     font-family:'JetBrains Mono',monospace;
     font-size:12px;
@@ -135,7 +143,7 @@
   <div class="hero-content">
     <div class="wordmark">Slypway</div>
     <p class="lede">Coming soon</p>
-    <h1>Slypway for Insurance - coming soon.</h1>
+    <h1><span class="highlight">Slypway for Insurance. Launching soon.</span></h1>
     <form id="signup-form" novalidate>
       <input type="email" id="email" name="email" placeholder="you@company.com" autocomplete="email" required>
       <button type="submit">Get notified when we launch</button>

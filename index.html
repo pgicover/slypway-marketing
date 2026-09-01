@@ -185,7 +185,7 @@
       .then(function(result){
         submitBtn.disabled = false;
         if(result.ok){
-          setStatus('You are on the list. We will let you know when we launch.', 'success');
+          setStatus("thanks, we'll be sure to let you know when we launch", 'success');
           form.reset();
         } else {
           setStatus((result.data && result.data.error) || 'Something went wrong. Please try again.', 'error');

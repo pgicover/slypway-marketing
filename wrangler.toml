@@ -1,0 +1,15 @@
+name = "slypway-marketing"
+compatibility_date = "2026-08-01"
+pages_build_output_dir = "."
+
+# D1 binding for the email signup capture (functions/api/signup.js).
+# `wrangler pages dev` provides a local D1 instance for this binding automatically.
+#
+# Before the FIRST production deploy:
+#   1. npx wrangler d1 create slypway-marketing-signups
+#   2. Copy the returned database_id into the placeholder below.
+#   3. Apply the schema: npx wrangler d1 execute slypway-marketing-signups --remote --file=./schema.sql
+[[d1_databases]]
+binding = "DB"
+database_name = "slypway-marketing-signups"
+database_id = "REPLACE_WITH_PRODUCTION_D1_DATABASE_ID"

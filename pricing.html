@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Slypway pricing</title>
+<meta name="description" content="Slypway pricing for brokers and MGAs. One price per seat, billed annually or monthly. Build your own programs on the canvas, or have a Slypway underwriter build one for you.">
+<link rel="canonical" href="https://slypway.com/pricing">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700;800&family=Inter:wght@400;500&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+:root{--sw-accent:#3B82F6;--sw-ink:#F4F2EE;--sw-base:#0B0D0E}
+*{box-sizing:border-box}
+body{margin:0;background:var(--sw-base);color:var(--sw-ink);font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+a:hover{color:inherit}
+::selection{background:var(--sw-accent);color:var(--sw-base)}
+:focus-visible{outline:2px solid var(--sw-accent);outline-offset:4px}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(24px,6vw,80px)}
+.eyebrow{display:block;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--sw-accent);margin-bottom:24px}
+.section-title{font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:clamp(28px,4.2vw,46px);line-height:1.1;letter-spacing:-.03em;margin:0 0 20px;text-wrap:pretty}
+.section-lead{font-size:clamp(16px,1.5vw,19px);line-height:1.65;margin:0;max-width:640px;color:var(--sw-ink);text-wrap:pretty}
+.mono-label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase}
+
+header.site-header{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:26px clamp(24px,6vw,80px);border-bottom:1px solid rgba(244,242,238,.14)}
+.logo{font-family:'Hanken Grotesk',sans-serif;font-weight:800;font-size:20px;letter-spacing:-.03em}
+.site-nav{display:flex;align-items:center;gap:clamp(16px,2.4vw,32px)}
+.site-nav a{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase;opacity:.6;transition:opacity .25s ease}
+.site-nav a:hover,.site-nav a[aria-current="page"]{opacity:1}
+.site-nav a.nav-cta{opacity:1;padding:9px 16px;border:1px solid currentColor;transition:color .25s ease,border-color .25s ease}
+.site-nav a.nav-cta:hover{color:var(--sw-accent);border-color:var(--sw-accent)}
+
+main section{padding:clamp(72px,11vh,120px) 0;border-top:1px solid rgba(244,242,238,.14)}
+main section:first-of-type{border-top:0;padding-top:clamp(88px,13vh,140px)}
+
+.hero p.section-lead{margin-top:4px}
+
+/* Billing toggle */
+.toggle-group{display:inline-flex;border:1px solid rgba(244,242,238,.35);margin-top:36px}
+.toggle-btn{appearance:none;border:0;background:transparent;color:var(--sw-ink);font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.05em;text-transform:uppercase;padding:13px 22px;cursor:pointer;transition:background .2s ease,color .2s ease}
+.toggle-btn+.toggle-btn{border-left:1px solid rgba(244,242,238,.35)}
+.toggle-btn[aria-pressed="true"]{background:var(--sw-ink);color:var(--sw-base)}
+.no-js .toggle-group{display:none}
+.price-block+.toggle-group{margin-top:20px;margin-bottom:0}
+.price-block+.toggle-group .toggle-btn{padding:10px 16px}
+
+/* Price display: default (no JS) shows both periods */
+.price-line{display:flex;align-items:baseline;gap:10px;margin:0}
+.price-figure{font-family:'JetBrains Mono',monospace;font-weight:500;font-size:clamp(30px,4vw,40px);letter-spacing:-.02em}
+.price-unit{font-size:14px;opacity:.65}
+.price-currency{font-size:45%;font-family:inherit;color:inherit;opacity:.65;vertical-align:top;margin-right:2px}
+.price-sub{margin:6px 0 0;font-size:13px;opacity:.6}
+.price-period-note{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.05em;text-transform:uppercase;opacity:.5;margin:0 0 8px}
+.price-block [data-period]{margin-bottom:20px}
+.price-block [data-period]:last-child{margin-bottom:0}
+html[data-billing="annual"] .price-block [data-period="monthly"]{display:none}
+html[data-billing="monthly"] .price-block [data-period="annual"]{display:none}
+.savings-line{font-size:13px;line-height:1.6;opacity:.7;margin:16px 0 0}
+html[data-billing="monthly"] .savings-line[data-period="annual"]{display:none}
+
+/* Tier cards */
+.tier-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(28px,4vw,40px);margin-top:56px}
+.tier-card{border:1px solid rgba(244,242,238,.35);padding:clamp(28px,4vw,40px);display:flex;flex-direction:column}
+.tier-name{font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:clamp(22px,2.6vw,28px);letter-spacing:-.02em;margin:0 0 8px}
+.tier-desc{font-size:15px;line-height:1.6;opacity:.7;margin:0 0 28px}
+.tier-features{list-style:none;margin:28px 0 32px;padding:0;display:flex;flex-direction:column;gap:14px}
+.tier-features li{font-size:15px;line-height:1.55;padding-left:20px;position:relative}
+.tier-features li::before{content:'';position:absolute;left:0;top:9px;width:8px;height:1px;background:var(--sw-accent)}
+.btn{appearance:none;display:inline-block;text-align:center;border:1px solid var(--sw-ink);border-radius:0;background:var(--sw-ink);color:var(--sw-base);padding:16px 24px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:background .25s ease,border-color .25s ease,color .25s ease}
+.btn:hover{background:var(--sw-accent);border-color:var(--sw-accent);color:var(--sw-base)}
+.btn-outline{background:transparent;color:var(--sw-ink);border-color:rgba(244,242,238,.5)}
+.btn-outline:hover{background:transparent;color:var(--sw-accent);border-color:var(--sw-accent)}
+.tier-card .btn{margin-top:auto}
+
+/* Add-on */
+.addon{border:1px solid rgba(244,242,238,.35);padding:clamp(32px,5vw,56px);display:grid;grid-template-columns:minmax(0,1.4fr) minmax(220px,.8fr);gap:clamp(32px,5vw,64px);align-items:start}
+.badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--sw-base);background:var(--sw-accent);padding:5px 10px;margin-bottom:20px}
+.addon-body{font-size:16px;line-height:1.65;margin:0 0 28px;max-width:60ch;text-wrap:pretty}
+.addon-included{list-style:none;margin:0 0 28px;padding:0;columns:2;column-gap:32px}
+.addon-included li{font-size:14px;line-height:1.7;break-inside:avoid}
+.addon-price{font-family:'JetBrains Mono',monospace;font-size:clamp(30px,3.4vw,38px);font-weight:500;letter-spacing:-.02em;margin:0 0 4px}
+.addon-price-note{font-size:13px;opacity:.6;margin:0 0 28px}
+@media(max-width:820px){.addon{grid-template-columns:1fr}}
+
+/* Comparison table */
+.table-scroll{overflow-x:auto;margin-top:48px;border:1px solid rgba(244,242,238,.2)}
+table.compare{border-collapse:collapse;width:100%;min-width:640px}
+table.compare caption{text-align:left;padding:16px 20px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase;opacity:.6}
+table.compare th,table.compare td{text-align:left;padding:14px 20px;font-size:14px;border-top:1px solid rgba(244,242,238,.14)}
+table.compare thead th{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase;opacity:.75;border-top:0}
+table.compare td:not(:first-child),table.compare th:not(:first-child){text-align:center}
+table.compare tbody th{font-weight:400;font-size:14px}
+tr.group-row th{background:rgba(244,242,238,.05);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase;opacity:.8;padding-top:16px;padding-bottom:16px}
+
+/* FAQ */
+.faq-list{margin-top:48px;display:flex;flex-direction:column;gap:32px;max-width:760px}
+.faq-item h3{font-family:'Hanken Grotesk',sans-serif;font-weight:700;font-size:19px;line-height:1.4;margin:0 0 10px}
+.faq-item p{font-size:15px;line-height:1.65;margin:0;opacity:.85;max-width:64ch}
+
+.closing{text-align:left}
+.closing .section-lead{margin-bottom:36px}
+
+.fine-print{padding:32px 0;border-top:1px solid rgba(244,242,238,.14)}
+.fine-print p{font-size:12px;line-height:1.7;opacity:.55;margin:0 0 6px;max-width:70ch}
+
+footer.site-footer{display:flex;align-items:center;height:80px;padding:0 clamp(24px,6vw,80px);border-top:1px solid rgba(244,242,238,.14);background:var(--sw-base)}
+
+@media(max-width:480px){
+  .tier-grid{grid-template-columns:1fr}
+  .addon-included{columns:1}
+  .toggle-group{width:100%}
+  .toggle-btn{flex:1 1 0}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important}}
+</style>
+</head>
+<body class="no-js">
+<header class="site-header">
+<a class="logo" href="./index.html">Slypway</a>
+<nav class="site-nav" aria-label="Primary">
+<a href="/how-it-works.html">How it works</a>
+<a href="/pricing.html" aria-current="page">Pricing</a>
+<a class="nav-cta" href="./contact.html">Talk to us</a>
+</nav>
+</header>
+
+<main>
+<div class="wrap">
+
+<section class="hero">
+<h1 class="section-title" style="font-size:clamp(34px,5.6vw,64px);max-width:900px">Pricing that scales with your book.</h1>
+<p class="section-lead">Broker and MGA seats share one platform: submissions, quotes, policies, reports, and Arlo. MGA seats add the canvas, to build and publish programs.</p>
+</section>
+
+<section aria-label="Pricing tiers">
+<div class="tier-grid">
+
+<div class="tier-card">
+<p class="tier-name">Broker</p>
+<p class="tier-desc">Daily users at a brokerage: submissions, quotes, policies, and the book they write.</p>
+
+<div class="price-block">
+<div data-period="annual">
+<p class="price-period-note">Paid annually</p>
+<p class="price-line"><span class="price-figure"><span class="price-currency">USD </span>$9</span><span class="price-unit">per seat per month</span></p>
+<p class="price-sub">billed annually (USD$108 per seat per year)</p>
+</div>
+<div data-period="monthly">
+<p class="price-period-note">Paid monthly</p>
+<p class="price-line"><span class="price-figure"><span class="price-currency">USD </span>$12</span><span class="price-unit">per seat per month</span></p>
+<p class="price-sub">billed monthly</p>
+</div>
+</div>
+<div class="toggle-group" role="group" aria-label="Billing period">
+<button type="button" class="toggle-btn" data-period-btn="annual" aria-pressed="true">Pay annually</button>
+<button type="button" class="toggle-btn" data-period-btn="monthly" aria-pressed="false">Pay monthly</button>
+</div>
+<p class="savings-line" data-period="annual">Save 25 percent paying annually: USD$9 per seat per month instead of USD$12, a saving of USD$36 per seat per year.</p>
+
+<ul class="tier-features">
+<li>Submission workspace, every file tracked end to end</li>
+<li>Quotes and policies in one place</li>
+<li>Broker inbox for incoming submissions</li>
+<li>Find markets for hard to place risks</li>
+<li>Reports on your book</li>
+<li>Commission tracking</li>
+<li>Chat with Arlo: run reports, start a submission, check renewals due</li>
+</ul>
+
+<a id="btn-broker" class="btn" href="https://app.slypway.com/?plan=broker&period=annual">Start with Broker</a>
+</div>
+
+<div class="tier-card">
+<p class="tier-name">MGA</p>
+<p class="tier-desc">Program managers and underwriters who build and run insurance programs.</p>
+
+<div class="price-block">
+<p class="price-line"><span class="price-figure">Contact for pricing</span></p>
+</div>
+
+<ul class="tier-features">
+<li>Everything in Broker</li>
+<li>The canvas: build rating, rules, and referral triggers without code</li>
+<li>Import a rating spreadsheet or an existing quote template</li>
+<li>Publish a storefront for each program</li>
+<li>Program documents: wordings and certificates</li>
+<li>Email to quote: incoming submission emails become structured quotes</li>
+<li>List programs on the marketplace for your broker network</li>
+<li>Program access controls per broker</li>
+<li>AI-built nodes badged for your review before anything publishes</li>
+</ul>
+
+<a id="btn-mga" class="btn" href="./contact.html">Contact us</a>
+</div>
+
+</div>
+</section>
+
+<section aria-labelledby="addon-title">
+<div class="addon">
+<div>
+<span class="badge">Recommended</span>
+<h2 id="addon-title" class="section-title" style="font-size:clamp(24px,3.2vw,34px)">Have a Slypway underwriter build it</h2>
+<p class="addon-body">A Slypway underwriter and coder builds and tests your program on the canvas, from your rating, rules, and wordings. You review every badged node before it publishes. This is the recommended way to launch a new program, and it costs nothing extra in ongoing fees: you can also build it yourself on the canvas at no additional cost.</p>
+<ul class="addon-included">
+<li>Scoping call</li>
+<li>Build on the canvas</li>
+<li>Rating and rules</li>
+<li>Documents</li>
+<li>Testing against sample submissions</li>
+<li>Handover</li>
+</ul>
+</div>
+<div>
+<p class="addon-price">Contact for pricing</p>
+<a class="btn btn-outline" href="./contact.html">Contact us</a>
+</div>
+</div>
+</section>
+
+<section aria-labelledby="compare-title">
+<h2 id="compare-title" class="section-title">Compare what each seat includes</h2>
+<div class="table-scroll">
+<table class="compare">
+<caption>Feature comparison between Broker and MGA seats</caption>
+<thead>
+<tr>
+<th scope="col">Feature</th>
+<th scope="col">Broker</th>
+<th scope="col">MGA</th>
+</tr>
+</thead>
+<tbody>
+<tr class="group-row"><th colspan="3" scope="colgroup">Book of business</th></tr>
+<tr><th scope="row">Submission workspace</th><td>Yes</td><td>Yes</td></tr>
+<tr><th scope="row">Quotes and binding</th><td>Yes</td><td>Yes</td></tr>
+<tr><th scope="row">Policies</th><td>Yes</td><td>Yes</td></tr>
+<tr><th scope="row">Broker inbox</th><td>Yes</td><td>Yes</td></tr>
+<tr><th scope="row">Find markets</th><td>Yes</td><td>Yes</td></tr>
+<tr><th scope="row">Reports</th><td>Yes</td><td>Yes</td></tr>
+<tr><th scope="row">Commission tracking</th><td>Yes</td><td>Yes</td></tr>
+<tr><th scope="row">Contacts and clients</th><td>Yes</td><td>Yes</td></tr>
+<tr class="group-row"><th colspan="3" scope="colgroup">Program building</th></tr>
+<tr><th scope="row">The canvas (rating, rules, referral triggers)</th><td>No</td><td>Yes</td></tr>
+<tr><th scope="row">Import a rating spreadsheet or quote template</th><td>No</td><td>Yes</td></tr>
+<tr><th scope="row">Program storefront publishing</th><td>No</td><td>Yes</td></tr>
+<tr><th scope="row">Program documents (wordings, certificates)</th><td>No</td><td>Yes</td></tr>
+<tr><th scope="row">Email to quote</th><td>No</td><td>Yes</td></tr>
+<tr><th scope="row">Program marketplace listing</th><td>No</td><td>Yes</td></tr>
+<tr><th scope="row">Program access controls per broker</th><td>No</td><td>Yes</td></tr>
+<tr class="group-row"><th colspan="3" scope="colgroup">Automation and network</th></tr>
+<tr><th scope="row">Chat with Arlo</th><td>Yes</td><td>Yes</td></tr>
+<tr><th scope="row">Manage your broker network</th><td>No</td><td>Yes</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section aria-labelledby="faq-title">
+<h2 id="faq-title" class="section-title">Questions</h2>
+<div class="faq-list">
+
+<div class="faq-item">
+<h3>What is a seat?</h3>
+<p>A seat is one named person with a login to your Slypway dashboard. Shared logins are not supported.</p>
+</div>
+
+<div class="faq-item">
+<h3>Can I switch between monthly and annual billing?</h3>
+<p>Yes, from Settings at any time. A switch takes effect at your next billing date, so no partial-period charge lands mid-cycle.<!-- PENDING: billing decision --></p>
+</div>
+
+<div class="faq-item">
+<h3>Can I add or remove seats?</h3>
+<p>Yes. Add a seat and it is available right away. Removing a seat takes effect at renewal, to keep billing simple and predictable.<!-- PENDING: billing decision --></p>
+</div>
+
+<div class="faq-item">
+<h3>What happens if I need changes to a program after the Slypway build?</h3>
+<p>The program is yours on the canvas from handover onward: edit rating, rules, or documents yourself at any time, at no extra cost. A new Slypway underwriter build applies only for a rebuild of that size; ask Slypway support for anything smaller.<!-- PENDING: billing decision --></p>
+</div>
+
+<div class="faq-item">
+<h3>Who bills me?</h3>
+<p>InsureCert Systems Inc. handles billing for Slypway. Charges on your card or invoice will show InsureCert Systems Inc.</p>
+</div>
+
+<div class="faq-item">
+<h3>Do these prices include tax?</h3>
+<p>No. Prices are in USD and exclude applicable taxes, added where required.</p>
+</div>
+
+</div>
+</section>
+
+<section class="closing" aria-labelledby="closing-title">
+<h2 id="closing-title" class="section-title">Start with the tier that matches how you work.</h2>
+<p class="section-lead">Brokers write and track business. MGAs build the programs brokers write on. Both run on Arlo and the same dashboard.</p>
+<a class="btn" href="./contact.html">Start with Slypway</a>
+</section>
+
+<div class="fine-print">
+<p>InsureCert Systems Inc. handles billing for Slypway. Prices are in USD and exclude applicable taxes.</p>
+</div>
+
+</div>
+</main>
+
+<footer class="site-footer">
+<span class="mono-label" style="opacity:.55">Slypway. Canada. hello@slypway.com</span>
+</footer>
+
+<script>
+(function () {
+  document.body.classList.remove('no-js');
+  document.documentElement.setAttribute('data-billing', 'annual');
+
+  var buttons = Array.prototype.slice.call(document.querySelectorAll('[data-period-btn]'));
+  var brokerBtn = document.getElementById('btn-broker');
+
+  function setPeriodParam(anchor, period) {
+    if (!anchor) return;
+    try {
+      var url = new URL(anchor.getAttribute('href'), window.location.href);
+      url.searchParams.set('period', period);
+      anchor.setAttribute('href', url.toString());
+    } catch (e) {}
+  }
+
+  function setPeriod(period) {
+    document.documentElement.setAttribute('data-billing', period);
+    buttons.forEach(function (btn) {
+      var active = btn.getAttribute('data-period-btn') === period;
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+    setPeriodParam(brokerBtn, period);
+  }
+
+  buttons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      setPeriod(btn.getAttribute('data-period-btn'));
+    });
+  });
+
+  setPeriod('annual');
+})();
+</script>
+</body>
+</html>

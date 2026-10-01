@@ -20,12 +20,16 @@ CREATE TABLE IF NOT EXISTS prelaunch_signups (
   verified_at TEXT,
   first_name TEXT,
   last_name TEXT,
+  email TEXT,
   company TEXT,
   role TEXT,
   onboarding_completed_at TEXT,
   created_at TEXT NOT NULL,
   updated_at TEXT NOT NULL
 );
+
+-- Existing databases created before this column existed need:
+--   ALTER TABLE prelaunch_signups ADD COLUMN email TEXT;
 
 -- Record of events that should (or did) trigger an email to
 -- admin@slypway.com via Resend (see functions/_lib/prelaunch.js). This

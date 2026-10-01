@@ -38,6 +38,10 @@
         </label>
       </div>
       <label class="sw-form-field">
+        <span class="sw-label">Email</span>
+        <input class="sw-field-box" id="email" name="email" type="email" autocomplete="email" required>
+      </label>
+      <label class="sw-form-field">
         <span class="sw-label">Company name</span>
         <input class="sw-field-box" id="company" name="company" autocomplete="organization" placeholder="Optional if you are pre-launch">
       </label>
@@ -70,13 +74,14 @@
     event.preventDefault();
     var first = document.getElementById("first").value.trim();
     var last = document.getElementById("last").value.trim();
+    var email = document.getElementById("email").value.trim();
     var company = document.getElementById("company").value.trim();
     var role = document.getElementById("role").value.trim();
     var errorEl = document.getElementById("onboarding-error");
     var button = document.getElementById("onboarding-submit");
 
-    if (!first || !last || !role) {
-      errorEl.textContent = "Fill in your first name, last name and what you do.";
+    if (!first || !last || !email || !role) {
+      errorEl.textContent = "Fill in your first name, last name, email and what you do.";
       errorEl.style.display = "block";
       return;
     }
@@ -90,10 +95,11 @@
         country: signup.country || "CA",
         first: first,
         last: last,
+        email: email,
         company: company,
         role: role,
       });
-      sw.writeSignup({ first: first, last: last, company: company, role: role });
+      sw.writeSignup({ first: first, last: last, email: email, company: company, role: role });
       window.location.href = "/confirm.html";
     } catch (err) {
       errorEl.textContent = err.message || "Something went wrong. Please try again.";

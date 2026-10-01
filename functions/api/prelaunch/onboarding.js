@@ -10,6 +10,7 @@
 // admin_notifications records what happened (see functions/_lib/prelaunch.js).
 
 import {
+  isValidEmail,
   jsonResponse,
   markNotificationFailed,
   markNotificationSent,
@@ -25,11 +26,12 @@ function clean(value, maxLength) {
   return typeof value === "string" ? value.trim().slice(0, maxLength) : "";
 }
 
-function buildOnboardingEmailText({ first, last, company, role, phone, verifiedAt }) {
+function buildOnboardingEmailText({ first, last, email, company, role, phone, verifiedAt }) {
   return [
     "A Slypway pre-launch signup just completed onboarding.",
     "",
     `Name: ${first} ${last}`,
+    `Email: ${email}`,
     `Company: ${company || "(not provided)"}`,
     `Role: ${role}`,
     `Phone: ${phone}`,
@@ -54,12 +56,20 @@ export async function onRequestPost(context) {
 
   const first = clean(body?.first, 120);
   const last = clean(body?.last, 120);
+  const email = clean(body?.email, 200);
   const company = clean(body?.company, 200);
   const role = clean(body?.role, 1000);
 
-  if (!first || !last || !role) {
+  if (!first || !last || !email || !role) {
     return jsonResponse(
-      { error: "Fill in your first name, last name and what you do." },
+      { error: "Fill in your first name, last name, email and what you do." },
+      400
+    );
+  }
+
+  if (!isValidEmail(email)) {
+    return jsonResponse(
+      { error: "Fill in your first name, last name, email and what you do." },
       400
     );
   }
@@ -78,10 +88,10 @@ export async function onRequestPost(context) {
     const timestamp = nowIso();
     await env.DB.prepare(
       `UPDATE prelaunch_signups
-       SET first_name = ?2, last_name = ?3, company = ?4, role = ?5, onboarding_completed_at = ?6, updated_at = ?6
+       SET first_name = ?2, last_name = ?3, email = ?4, company = ?5, role = ?6, onboarding_completed_at = ?7, updated_at = ?7
        WHERE phone_e164 = ?1`
     )
-      .bind(e164, first, last, company, role, timestamp)
+      .bind(e164, first, last, email, company, role, timestamp)
       .run();
 
     const notificationId = await recordAdminNotification(
@@ -91,6 +101,7 @@ export async function onRequestPost(context) {
       {
         first,
         last,
+        email,
         company,
         role,
         country: normalizeCountry(body?.country),
@@ -106,6 +117,7 @@ export async function onRequestPost(context) {
           text: buildOnboardingEmailText({
             first,
             last,
+            email,
             company,
             role,
             phone: e164,

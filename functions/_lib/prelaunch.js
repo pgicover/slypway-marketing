@@ -28,6 +28,15 @@ export function normalizeCountry(rawCountry) {
   return rawCountry === "US" ? "US" : "CA";
 }
 
+// Simple, deliberately permissive shape check (one @, something on each
+// side, a dot in the domain part). Not a full RFC 5322 validator; it only
+// needs to catch missing/malformed input before it is stored and emailed.
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export function isValidEmail(rawEmail) {
+  return typeof rawEmail === "string" && EMAIL_PATTERN.test(rawEmail.trim());
+}
+
 export function nowIso() {
   return new Date().toISOString();
 }

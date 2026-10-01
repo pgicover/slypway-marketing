@@ -578,4 +578,8 @@ textarea.sw-field-box {
   .sw-card {
     padding: 24px;
   }
+
+  .sw-wordmark {
+    font-size: clamp(32px, 11vw, 55px);
+  }
 }

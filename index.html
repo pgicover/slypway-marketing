@@ -6,7 +6,8 @@
 <title>Slypway — Build the MGA you dreamed about.</title>
 <meta name="description" content="Capacity, custom AI underwriting and business support for underwriters launching their own MGA. Early access list open.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('sw-theme')||'dark';}catch(e){}</script>
-<link rel="stylesheet" href="/assets/prelaunch.css">
+<!-- version query busts the 4-hour cache; bump v= whenever prelaunch.css or prelaunch.js changes -->
+<link rel="stylesheet" href="/assets/prelaunch.css?v=1">
 <style>
   body { position: relative; }
   .sw-footer-note { color: var(--sw-faint); }
@@ -61,7 +62,7 @@
   </div>
 </footer>
 
-<script src="/assets/prelaunch.js"></script>
+<script src="/assets/prelaunch.js?v=1"></script>
 <script>
 (function () {
   var video = document.getElementById("hero-video");

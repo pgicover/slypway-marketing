@@ -1,15 +1,39 @@
 // POST /api/contact
 // Body: { name, email, company?, role?, message? }
 //
-// Stores a "Talk to us" submission from contact.html in D1. There is no
-// outbound mail sender in this repo (see the handoff report), so this
-// does not email hello@slypway.com or anyone else; it only persists the
-// message so it can be reviewed or exported until a mail provider exists.
+// Stores a "Talk to us" submission from contact.html in D1, records a
+// durable admin_notifications row, and emails admin@slypway.com via Resend
+// (see functions/_lib/prelaunch.js for sendAdminEmail). A missing
+// RESEND_API_KEY or a failed send never fails the request: the row is
+// already saved, the submitter still gets a success response, and the
+// admin_notifications row records what happened instead.
+
+import {
+  markNotificationFailed,
+  markNotificationSent,
+  recordAdminNotification,
+  resendConfigured,
+  sendAdminEmail,
+} from "../_lib/prelaunch.js";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function clean(value, maxLength) {
   return typeof value === "string" ? value.trim().slice(0, maxLength) : "";
+}
+
+function buildContactEmailText({ name, email, company, role, message }) {
+  return [
+    "A Slypway \"Talk to us\" contact form submission just came in.",
+    "",
+    `Name: ${name}`,
+    `Email: ${email}`,
+    `Company: ${company || "(not provided)"}`,
+    `Role: ${role || "(not provided)"}`,
+    "",
+    "Message:",
+    message || "(not provided)",
+  ].join("\n");
 }
 
 export async function onRequestPost(context) {
@@ -38,6 +62,32 @@ export async function onRequestPost(context) {
     )
       .bind(name, email, company, role, message, new Date().toISOString())
       .run();
+
+    const notificationId = await recordAdminNotification(env.DB, "contact_message", null, {
+      name,
+      email,
+      company,
+      role,
+      message,
+    });
+
+    if (!resendConfigured(env)) {
+      await markNotificationFailed(env.DB, notificationId, "resend_not_configured");
+    } else {
+      try {
+        await sendAdminEmail(env, {
+          subject: `Slypway contact form: ${name}`,
+          text: buildContactEmailText({ name, email, company, role, message }),
+        });
+        await markNotificationSent(env.DB, notificationId);
+      } catch (sendError) {
+        await markNotificationFailed(
+          env.DB,
+          notificationId,
+          sendError?.message || "send_failed"
+        );
+      }
+    }
 
     return jsonResponse({ ok: true });
   } catch (err) {

@@ -52,7 +52,8 @@ CREATE TABLE IF NOT EXISTS admin_notifications (
 );
 
 -- Contact page (functions/api/contact.js) submissions from existing MGAs
--- and carriers. No mail sender exists yet either; see report.
+-- and carriers. Each submission also records an admin_notifications row
+-- and emails admin@slypway.com via Resend; see functions/_lib/prelaunch.js.
 CREATE TABLE IF NOT EXISTS contact_messages (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,

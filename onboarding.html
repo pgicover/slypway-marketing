@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tell us about you: Slypway</title>
+<meta name="description" content="A few details so Slypway knows who it is texting.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('sw-theme')||'dark';}catch(e){}</script>
+<link rel="stylesheet" href="/assets/prelaunch.css">
+</head>
+<body>
+
+<header class="sw-header sw-rise" style="animation-delay:0ms">
+  <a class="sw-wordmark" href="/index.html">Slypway</a>
+  <div class="sw-header-right">
+    <div class="sw-toggle" role="group" aria-label="Color mode">
+      <button type="button" data-theme-button="dark" data-mode="dark">Dark</button>
+      <button type="button" data-theme-button="light" data-mode="light">Light</button>
+    </div>
+  </div>
+</header>
+
+<main class="sw-card-centered">
+  <div class="sw-card sw-rise" style="max-width:420px;animation-delay:250ms">
+    <div class="sw-eyebrow sw-eyebrow-accent">&#10003; Number verified</div>
+    <h1 style="margin-top:14px">Tell us about you</h1>
+    <p class="sw-sub">So we know who we are texting.</p>
+
+    <form id="onboarding-form" style="display:flex;flex-direction:column;gap:16px;margin-top:24px" novalidate>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr));gap:12px">
+        <label class="sw-form-field">
+          <span class="sw-label">First name</span>
+          <input class="sw-field-box" id="first" name="first" autocomplete="given-name" required>
+        </label>
+        <label class="sw-form-field">
+          <span class="sw-label">Last name</span>
+          <input class="sw-field-box" id="last" name="last" autocomplete="family-name" required>
+        </label>
+      </div>
+      <label class="sw-form-field">
+        <span class="sw-label">Company name</span>
+        <input class="sw-field-box" id="company" name="company" autocomplete="organization" placeholder="Optional if you are pre-launch">
+      </label>
+      <label class="sw-form-field">
+        <span class="sw-label">What do you do?</span>
+        <textarea class="sw-field-box" id="role" name="role" rows="3" placeholder="Your role and the lines you write" required></textarea>
+      </label>
+      <p id="onboarding-error" class="sw-error" style="display:none"></p>
+      <button class="sw-button sw-button-full" type="submit" id="onboarding-submit">Join the waitlist &rarr;</button>
+    </form>
+  </div>
+</main>
+
+<footer class="sw-footer">
+  <div class="sw-footer-inner">&copy; 2026 Slypway</div>
+</footer>
+
+<script src="/assets/prelaunch.js"></script>
+<script>
+(function () {
+  var sw = window.SwPrelaunch;
+  var signup = sw.readSignup();
+
+  if (!signup.phone || !signup.verified) {
+    window.location.href = "/text.html";
+    return;
+  }
+
+  document.getElementById("onboarding-form").addEventListener("submit", async function (event) {
+    event.preventDefault();
+    var first = document.getElementById("first").value.trim();
+    var last = document.getElementById("last").value.trim();
+    var company = document.getElementById("company").value.trim();
+    var role = document.getElementById("role").value.trim();
+    var errorEl = document.getElementById("onboarding-error");
+    var button = document.getElementById("onboarding-submit");
+
+    if (!first || !last || !role) {
+      errorEl.textContent = "Fill in your first name, last name and what you do.";
+      errorEl.style.display = "block";
+      return;
+    }
+    errorEl.style.display = "none";
+    button.disabled = true;
+    button.textContent = "Submitting…";
+
+    try {
+      await sw.postJSON("/api/prelaunch/onboarding", {
+        phone: sw.phoneDigits(signup.phone),
+        country: signup.country || "CA",
+        first: first,
+        last: last,
+        company: company,
+        role: role,
+      });
+      sw.writeSignup({ first: first, last: last, company: company, role: role });
+      window.location.href = "/confirm.html";
+    } catch (err) {
+      errorEl.textContent = err.message || "Something went wrong. Please try again.";
+      errorEl.style.display = "block";
+      button.disabled = false;
+      button.textContent = "Join the waitlist →";
+    }
+  });
+})();
+</script>
+</body>
+</html>

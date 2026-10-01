@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enter your code: Slypway</title>
+<meta name="description" content="Enter the 6-digit code Slypway sent by SMS.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('sw-theme')||'dark';}catch(e){}</script>
+<link rel="stylesheet" href="/assets/prelaunch.css">
+</head>
+<body>
+
+<header class="sw-header sw-rise" style="animation-delay:0ms">
+  <a class="sw-wordmark" href="/index.html">Slypway</a>
+  <div class="sw-header-right">
+    <a class="sw-back" href="/text.html">&larr; Back</a>
+    <div class="sw-toggle" role="group" aria-label="Color mode">
+      <button type="button" data-theme-button="dark" data-mode="dark">Dark</button>
+      <button type="button" data-theme-button="light" data-mode="light">Light</button>
+    </div>
+  </div>
+</header>
+
+<main class="sw-card-centered">
+  <div class="sw-card sw-rise" style="max-width:364px;animation-delay:250ms">
+    <h1>Enter your code</h1>
+    <p class="sw-sub">We sent a 6-digit code by SMS to <span id="phone-display">your phone</span>.</p>
+
+    <div class="sw-otp-grid" role="group" aria-label="6-digit code">
+      <input class="sw-otp" data-otp="0" inputmode="numeric" maxlength="1" autocomplete="one-time-code" aria-label="Digit 1">
+      <input class="sw-otp" data-otp="1" inputmode="numeric" maxlength="1" autocomplete="off" aria-label="Digit 2">
+      <input class="sw-otp" data-otp="2" inputmode="numeric" maxlength="1" autocomplete="off" aria-label="Digit 3">
+      <input class="sw-otp" data-otp="3" inputmode="numeric" maxlength="1" autocomplete="off" aria-label="Digit 4">
+      <input class="sw-otp" data-otp="4" inputmode="numeric" maxlength="1" autocomplete="off" aria-label="Digit 5">
+      <input class="sw-otp" data-otp="5" inputmode="numeric" maxlength="1" autocomplete="off" aria-label="Digit 6">
+    </div>
+
+    <p id="verifying" class="sw-label" style="display:none;margin-top:14px;color:var(--sw-accent-text)">Verifying&hellip;</p>
+    <p id="code-error" class="sw-error" style="display:none;margin-top:14px"></p>
+
+    <p style="margin:28px 0 0;font-size:13px;line-height:1.7;color:var(--sw-muted)">
+      No code yet? Check filtered or blocked messages.<br>
+      <button type="button" id="resend" class="sw-text-link">Send a new code</button>
+      or <a href="/text.html" class="sw-text-link" style="color:var(--sw-link)">change number</a>.
+    </p>
+  </div>
+</main>
+
+<footer class="sw-footer">
+  <div class="sw-footer-inner">&copy; 2026 Slypway</div>
+</footer>
+
+<script src="/assets/prelaunch.js"></script>
+<script>
+(function () {
+  var sw = window.SwPrelaunch;
+  var signup = sw.readSignup();
+
+  if (!signup.phone) {
+    window.location.href = "/text.html";
+    return;
+  }
+
+  document.getElementById("phone-display").textContent = "+1 " + signup.phone;
+
+  var boxes = Array.prototype.slice.call(document.querySelectorAll("[data-otp]"));
+  var errorEl = document.getElementById("code-error");
+  var verifyingEl = document.getElementById("verifying");
+
+  setTimeout(function () {
+    boxes[0].focus();
+  }, 900);
+
+  function currentCode() {
+    return boxes.map(function (box) { return box.value; }).join("");
+  }
+
+  function setDisabled(disabled) {
+    boxes.forEach(function (box) { box.disabled = disabled; });
+  }
+
+  async function attemptVerify() {
+    var code = currentCode();
+    if (code.length !== 6) return;
+    verifyingEl.style.display = "block";
+    errorEl.style.display = "none";
+    setDisabled(true);
+    try {
+      await sw.postJSON("/api/prelaunch/verify-code", {
+        phone: sw.phoneDigits(signup.phone),
+        country: signup.country || "CA",
+        code: code,
+      });
+      sw.writeSignup({ verified: true });
+      setTimeout(function () {
+        window.location.href = "/onboarding.html";
+      }, 900);
+    } catch (err) {
+      verifyingEl.style.display = "none";
+      setDisabled(false);
+      errorEl.textContent = err.message || "That code is incorrect or has expired.";
+      errorEl.style.display = "block";
+      boxes.forEach(function (box) { box.value = ""; });
+      boxes[0].focus();
+    }
+  }
+
+  boxes.forEach(function (box, index) {
+    box.addEventListener("focus", function () { box.select(); });
+
+    box.addEventListener("input", function () {
+      var digit = box.value.replace(/\D/g, "").slice(-1);
+      box.value = digit;
+      if (digit && boxes[index + 1]) boxes[index + 1].focus();
+      attemptVerify();
+    });
+
+    box.addEventListener("keydown", function (event) {
+      if (event.key === "Backspace" && !box.value && boxes[index - 1]) {
+        boxes[index - 1].value = "";
+        boxes[index - 1].focus();
+        event.preventDefault();
+      } else if (event.key === "ArrowLeft" && boxes[index - 1]) {
+        boxes[index - 1].focus();
+      } else if (event.key === "ArrowRight" && boxes[index + 1]) {
+        boxes[index + 1].focus();
+      }
+    });
+
+    box.addEventListener("paste", function (event) {
+      var text = (event.clipboardData.getData("text") || "").replace(/\D/g, "").slice(0, 6);
+      if (!text) return;
+      event.preventDefault();
+      boxes.forEach(function (b, i) { b.value = text[i] || ""; });
+      var nextIndex = Math.min(text.length, 5);
+      boxes[nextIndex].focus();
+      attemptVerify();
+    });
+  });
+
+  var resendButton = document.getElementById("resend");
+  resendButton.addEventListener("click", async function () {
+    resendButton.disabled = true;
+    try {
+      await sw.postJSON("/api/prelaunch/send-code", {
+        phone: sw.phoneDigits(signup.phone),
+        country: signup.country || "CA",
+        idea: signup.idea || "",
+      });
+      resendButton.textContent = "New code sent";
+    } catch (err) {
+      errorEl.textContent = err.message || "We could not send a new code. Try again shortly.";
+      errorEl.style.display = "block";
+      resendButton.disabled = false;
+    }
+  });
+})();
+</script>
+</body>
+</html>

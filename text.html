@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Text Slypway</title>
+<meta name="description" content="Enter your mobile number and Slypway will text you a code to get started.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('sw-theme')||'dark';}catch(e){}</script>
+<link rel="stylesheet" href="/assets/prelaunch.css">
+</head>
+<body>
+
+<header class="sw-header sw-rise" style="animation-delay:0ms">
+  <a class="sw-wordmark" href="/index.html">Slypway</a>
+  <div class="sw-header-right">
+    <a class="sw-back" href="/index.html">&larr; Back</a>
+    <div class="sw-toggle" role="group" aria-label="Color mode">
+      <button type="button" data-theme-button="dark" data-mode="dark">Dark</button>
+      <button type="button" data-theme-button="light" data-mode="light">Light</button>
+    </div>
+  </div>
+</header>
+
+<main class="sw-card-centered">
+  <div class="sw-card sw-rise" style="max-width:364px;animation-delay:250ms">
+    <h1>Text Slypway</h1>
+    <p class="sw-sub">We will send a code to your phone, then pick up the conversation by text.</p>
+
+    <div id="idea-recap" class="sw-form-field" style="display:none;margin-top:16px;padding:10px 12px;border:1px solid var(--sw-border);border-radius:8px">
+      <span class="sw-label">You are building</span>
+      <span id="idea-text" style="font-size:14px;color:var(--sw-fg)"></span>
+    </div>
+
+    <form id="phone-form" class="sw-idea-form" style="margin-top:24px;gap:20px" novalidate>
+      <div style="display:flex;align-items:stretch;height:42px;border:1px solid var(--sw-border);border-radius:8px;background:var(--sw-field);width:100%">
+        <select id="country" aria-label="Country" style="flex:0 0 auto;background:transparent;border:0;border-right:1px solid var(--sw-border);padding:0 8px 0 12px;font-family:var(--font-mono);font-size:12px;color:var(--sw-fg);outline:none;cursor:pointer">
+          <option value="CA">CA +1</option>
+          <option value="US">US +1</option>
+        </select>
+        <input id="phone" type="tel" autocomplete="tel" required placeholder="(555) 000-0000" aria-label="Mobile number" style="flex:1;min-width:0;background:transparent;border:0;padding:0 12px;font-family:var(--font-body);font-size:15px;color:var(--sw-fg);outline:none">
+      </div>
+      <p id="phone-error" class="sw-error" style="display:none;margin-top:-10px">That number looks short. Enter all 10 digits.</p>
+      <p style="margin:0;font-size:12.5px;line-height:1.6;color:var(--sw-muted)">By selecting Send code, you agree to the Slypway <a href="/terms.html" style="text-decoration:underline;text-underline-offset:3px">Terms of Service</a> and <a href="/sms-terms.html" style="text-decoration:underline;text-underline-offset:3px">SMS Terms</a>, and acknowledge the <a href="/privacy.html" style="text-decoration:underline;text-underline-offset:3px">Privacy Policy</a>. Message and data rates may apply.</p>
+      <p id="submit-error" class="sw-error" style="display:none"></p>
+      <button class="sw-button sw-button-full" type="submit" id="submit-button">Send code &rarr;</button>
+    </form>
+  </div>
+</main>
+
+<footer class="sw-footer">
+  <div class="sw-footer-inner">&copy; 2026 Slypway</div>
+</footer>
+
+<script src="/assets/prelaunch.js"></script>
+<script>
+(function () {
+  var sw = window.SwPrelaunch;
+  var params = new URLSearchParams(window.location.search);
+  var idea = params.get("idea") || sw.readSignup().idea || "";
+  if (idea) {
+    document.getElementById("idea-recap").style.display = "flex";
+    document.getElementById("idea-text").textContent = idea;
+  }
+
+  var phoneInput = document.getElementById("phone");
+  phoneInput.addEventListener("input", function () {
+    phoneInput.value = sw.formatPhone(phoneInput.value);
+    document.getElementById("phone-error").style.display = "none";
+  });
+
+  document.getElementById("phone-form").addEventListener("submit", async function (event) {
+    event.preventDefault();
+    var digits = sw.phoneDigits(phoneInput.value);
+    var errorEl = document.getElementById("phone-error");
+    var submitError = document.getElementById("submit-error");
+    submitError.style.display = "none";
+    if (digits.length < 10) {
+      errorEl.style.display = "block";
+      return;
+    }
+    errorEl.style.display = "none";
+
+    var country = document.getElementById("country").value;
+    var button = document.getElementById("submit-button");
+    button.disabled = true;
+    button.textContent = "Sending…";
+
+    try {
+      await sw.postJSON("/api/prelaunch/send-code", {
+        phone: digits,
+        country: country,
+        idea: idea,
+      });
+      sw.writeSignup({ phone: phoneInput.value, country: country, idea: idea });
+      window.location.href = "/code.html";
+    } catch (err) {
+      submitError.textContent = err.message || "We could not send the code. Try again shortly.";
+      submitError.style.display = "block";
+      button.disabled = false;
+      button.textContent = "Send code →";
+    }
+  });
+})();
+</script>
+</body>
+</html>

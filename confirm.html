@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>You are on the waitlist: Slypway</title>
+<meta name="description" content="Slypway has your number. Here is what happens next.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('sw-theme')||'dark';}catch(e){}</script>
+<link rel="stylesheet" href="/assets/prelaunch.css">
+</head>
+<body>
+
+<header class="sw-header sw-rise" style="animation-delay:0ms">
+  <a class="sw-wordmark" href="/index.html">Slypway</a>
+  <div class="sw-header-right">
+    <div class="sw-toggle" role="group" aria-label="Color mode">
+      <button type="button" data-theme-button="dark" data-mode="dark">Dark</button>
+      <button type="button" data-theme-button="light" data-mode="light">Light</button>
+    </div>
+  </div>
+</header>
+
+<main class="sw-card-centered">
+  <div class="sw-card sw-rise" style="max-width:572px;padding:28px;animation-delay:250ms">
+    <div class="sw-thread-header">
+      <span style="color:var(--sw-fg)">Slypway</span>
+      <span style="color:var(--sw-faint)">Text message &middot; now</span>
+    </div>
+
+    <div class="sw-thread">
+      <p class="sw-bubble" style="animation-delay:700ms">Hey <span id="first-name">there</span>. Good to hear from you.</p>
+      <p class="sw-bubble" style="animation-delay:1100ms">Quick heads-up on where things stand: you&rsquo;re on the waitlist. Slypway is working with a small group while we ramp up compute and reliability, so spots open gradually.</p>
+      <p class="sw-bubble" style="animation-delay:1500ms">You don&rsquo;t need to do anything. I&rsquo;ll text you here the moment a spot opens.</p>
+      <p class="sw-bubble" style="animation-delay:1900ms">One way to skip the line: do you know anyone already on Slypway? A member can ask their agent for an invite link, and if you open that link and sign in with this same number, you&rsquo;re in. Worth pinging whoever told you about us.</p>
+      <p class="sw-bubble" style="animation-delay:2300ms">Want a taste of how brokers get a quote? Email your name to <a href="mailto:demo@slypway.com">demo@slypway.com</a> and follow the instructions.</p>
+    </div>
+
+    <a href="/index.html" class="sw-rise" style="animation-delay:2700ms;display:inline-block;margin-top:24px;font-family:var(--font-mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase">&larr; Back to home</a>
+  </div>
+</main>
+
+<footer class="sw-footer">
+  <div class="sw-footer-inner">&copy; 2026 Slypway</div>
+</footer>
+
+<script src="/assets/prelaunch.js"></script>
+<script>
+(function () {
+  var signup = window.SwPrelaunch.readSignup();
+  if (signup.first) {
+    document.getElementById("first-name").textContent = signup.first;
+  }
+})();
+</script>
+</body>
+</html>

@@ -39,8 +39,19 @@ CREATE TABLE IF NOT EXISTS prelaunch_signups (
 -- visible here instead of silent. Never store the verification code or
 -- API key here; phone is truncated to last 4.
 --
--- Existing databases created before this column existed need:
+-- app_sent_at / app_error cover the separate handover of a completed
+-- onboarding signup to the Slypway app (POST /api/auth/waitlist/, see
+-- functions/api/prelaunch/onboarding.js and sendWaitlistSignup in
+-- functions/_lib/prelaunch.js), so the same row shows whether the admin
+-- email went out AND whether the person actually landed in the app's
+-- database. Never store the shared secret here.
+--
+-- Existing databases created before these columns existed need (each
+-- ALTER is safe to run once; D1/SQLite errors on a duplicate ADD COLUMN
+-- rather than corrupting anything, so just run it once per database):
 --   ALTER TABLE admin_notifications ADD COLUMN email_error TEXT;
+--   ALTER TABLE admin_notifications ADD COLUMN app_sent_at TEXT;
+--   ALTER TABLE admin_notifications ADD COLUMN app_error TEXT;
 CREATE TABLE IF NOT EXISTS admin_notifications (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   kind TEXT NOT NULL,
@@ -48,7 +59,9 @@ CREATE TABLE IF NOT EXISTS admin_notifications (
   payload TEXT,
   created_at TEXT NOT NULL,
   sent_at TEXT,
-  email_error TEXT
+  email_error TEXT,
+  app_sent_at TEXT,
+  app_error TEXT
 );
 
 -- Contact page (functions/api/contact.js) submissions from existing MGAs

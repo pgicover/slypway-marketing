@@ -127,6 +127,29 @@ export async function markNotificationFailed(db, id, reason) {
     .run();
 }
 
+// Same bookkeeping as markNotificationSent/markNotificationFailed above,
+// but for the separate handover of the signup to the Slypway app (see
+// sendWaitlistSignup below). Kept as its own pair of columns on the same
+// admin_notifications row so one row shows both outcomes: did the admin
+// email go out, and did the person actually land in the app's database.
+export async function markNotificationAppSent(db, id) {
+  if (!id) return;
+  await db
+    .prepare("UPDATE admin_notifications SET app_sent_at = ?2 WHERE id = ?1")
+    .bind(id, nowIso())
+    .run();
+}
+
+// The reason is a short internal label only (http status, timeout,
+// network error) -- never the shared secret, never the response body.
+export async function markNotificationAppFailed(db, id, reason) {
+  if (!id) return;
+  await db
+    .prepare("UPDATE admin_notifications SET app_error = ?2 WHERE id = ?1")
+    .bind(id, String(reason || "unknown_error").slice(0, 200))
+    .run();
+}
+
 const ADMIN_NOTIFICATION_EMAIL = "admin@slypway.com";
 const NOTIFICATION_FROM_EMAIL = "do-not-reply@slypway.com";
 
@@ -191,5 +214,53 @@ export async function sendSms(env, toE164Number, body) {
     // Deliberately do not read/log the response body: it can echo the
     // message text back, and we never want the code anywhere near a log.
     throw new Error("sms_send_failed");
+  }
+}
+
+// The Slypway app's API. One constant so the address only ever needs to
+// change in one place, instead of being copied into every caller.
+const WAITLIST_API_BASE_URL = "https://api.slypway.com";
+const WAITLIST_API_TIMEOUT_MS = 8000;
+
+export function waitlistApiConfigured(env) {
+  return Boolean(env.WAITLIST_SHARED_SECRET);
+}
+
+// Hands a completed waitlist signup to the Slypway app so the person gets
+// a User row there (POST /api/auth/waitlist/, see
+// apps/customauth/api.py::WaitlistSignupView in the app repo). The call
+// is authenticated with a shared secret header, never logged and never
+// echoed back. A hard timeout (AbortController) means a slow or hanging
+// app can never leave the person staring at a spinner here -- the caller
+// always treats this as best-effort and records the outcome rather than
+// letting it block or fail the signup. Throws on timeout, network error,
+// or a non-2xx response; the caller is expected to catch it and record
+// the failure via markNotificationAppFailed.
+export async function sendWaitlistSignup(env, { mobile_number, email, first_name, last_name }) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), WAITLIST_API_TIMEOUT_MS);
+
+  let response;
+  try {
+    response = await fetch(`${WAITLIST_API_BASE_URL}/api/auth/waitlist/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Waitlist-Secret": env.WAITLIST_SHARED_SECRET,
+      },
+      body: JSON.stringify({ mobile_number, email, first_name, last_name }),
+      signal: controller.signal,
+    });
+  } catch (err) {
+    if (err?.name === "AbortError") {
+      throw new Error("app_handover_timeout");
+    }
+    throw new Error("app_handover_network_error");
+  } finally {
+    clearTimeout(timeout);
+  }
+
+  if (!response.ok) {
+    throw new Error(`app_handover_http_${response.status}`);
   }
 }

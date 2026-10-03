@@ -152,7 +152,8 @@ textarea {
 }
 
 .sw-wordmark {
-  font-family: var(--font-brand);
+  font-family: var(--font-heading);
+  font-weight: 600;
   font-size: 55px;
   line-height: 1;
   color: var(--sw-fg);

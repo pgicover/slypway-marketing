@@ -7,7 +7,7 @@
 <meta name="description" content="Capacity, custom AI underwriting and business support for underwriters launching their own MGA. Early access list open.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('sw-theme')||'dark';}catch(e){}</script>
 <!-- version query busts the 4-hour cache; bump v= whenever prelaunch.css or prelaunch.js changes -->
-<link rel="stylesheet" href="/assets/prelaunch.css?v=3">
+<link rel="stylesheet" href="/assets/prelaunch.css?v=6">
 <style>
   body { position: relative; }
   .sw-footer-note { color: var(--sw-faint); }
@@ -19,7 +19,10 @@
 <div class="sw-veil" aria-hidden="true"></div>
 
 <header class="sw-header sw-rise" style="animation-delay:0ms">
-  <span class="sw-wordmark">Slypway</span>
+  <span class="sw-wordmark" role="img" aria-label="Slypway">
+    <img class="sw-wordmark-img" data-theme-img="dark" src="/assets/brand/slypway-brand-white.svg" width="540" height="130" alt="" aria-hidden="true">
+    <img class="sw-wordmark-img" data-theme-img="light" src="/assets/brand/slypway-brand-black.svg" width="540" height="130" alt="" aria-hidden="true">
+  </span>
   <div class="sw-toggle" role="group" aria-label="Color mode">
     <button type="button" data-theme-button="dark" data-mode="dark">Dark</button>
     <button type="button" data-theme-button="light" data-mode="light">Light</button>
@@ -53,10 +56,15 @@
 </main>
 
 <footer class="sw-footer sw-rise" style="animation-delay:800ms">
-  <div class="sw-footer-inner" style="justify-content:space-between">
+  <div class="sw-footer-inner" style="justify-content:space-between;flex-wrap:wrap;gap:10px 20px">
     <div class="sw-home-footer-note">
       <span class="sw-footer-note">Already running an MGA or a carrier?</span>
       <a href="/contact.html" style="color:var(--sw-fg);border-bottom:1px solid var(--sw-lime);padding-bottom:4px">Talk to us &rarr;</a>
+    </div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      <a href="/terms.html">Terms</a>
+      <a href="/sms-terms.html">SMS terms</a>
+      <a href="/privacy.html">Privacy</a>
     </div>
     <span class="sw-footer-note">&copy; 2026 Slypway</span>
   </div>

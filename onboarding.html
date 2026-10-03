@@ -6,12 +6,15 @@
 <title>Tell us about you: Slypway</title>
 <meta name="description" content="A few details so Slypway knows who it is texting.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('sw-theme')||'dark';}catch(e){}</script>
-<link rel="stylesheet" href="/assets/prelaunch.css?v=3">
+<link rel="stylesheet" href="/assets/prelaunch.css?v=6">
 </head>
 <body>
 
 <header class="sw-header sw-rise" style="animation-delay:0ms">
-  <a class="sw-wordmark" href="/index.html">Slypway</a>
+  <a class="sw-wordmark" href="/index.html" aria-label="Slypway">
+    <img class="sw-wordmark-img" data-theme-img="dark" src="/assets/brand/slypway-brand-white.svg" width="540" height="130" alt="" aria-hidden="true">
+    <img class="sw-wordmark-img" data-theme-img="light" src="/assets/brand/slypway-brand-black.svg" width="540" height="130" alt="" aria-hidden="true">
+  </a>
   <div class="sw-header-right">
     <div class="sw-toggle" role="group" aria-label="Color mode">
       <button type="button" data-theme-button="dark" data-mode="dark">Dark</button>
@@ -56,7 +59,14 @@
 </main>
 
 <footer class="sw-footer">
-  <div class="sw-footer-inner">&copy; 2026 Slypway</div>
+  <div class="sw-footer-inner" style="justify-content:space-between;flex-wrap:wrap;gap:10px 20px">
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      <a href="/terms.html">Terms</a>
+      <a href="/sms-terms.html">SMS terms</a>
+      <a href="/privacy.html">Privacy</a>
+    </div>
+    <span>&copy; 2026 Slypway</span>
+  </div>
 </footer>
 
 <script src="/assets/prelaunch.js?v=1"></script>

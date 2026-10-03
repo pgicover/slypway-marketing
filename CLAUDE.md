@@ -1,13 +1,13 @@
 # CLAUDE.md - Slypway Marketing Site
 
-This repo is the public marketing site for **Slypway** (slypway.com), the white-label insurance platform from InsureCert Systems Inc. It is a separate company and product from PGI (PGI-v2 repo). Never mix the two: no PGI branding, business rules, or GCP resources.
+This repo is the public marketing site for **Slypway** (slypway.com), the white-label insurance platform from Slypway Inc. It is a separate company and product from PGI (PGI-v2 repo). Never mix the two: no PGI branding, business rules, or GCP resources.
 
 The application itself (app.slypway.com, Django API, storefront worker) lives in `~/Projects/insurecert-v2/`. That repo's `CLAUDE.md`, `STYLE_GUIDE.md`, and `.claude/insurecert_copywriter_brief.md` are the authoritative brand, voice, and design rules; read them before writing copy or UI here.
 
 ## Brand
 
 - The product is **Slypway**, capital S, spelled with a y. Never Slipway, never Canvas.
-- The company is **InsureCert Systems Inc.**, used only in lockup small print and legal contexts.
+- The company is **Slypway Inc.** (formerly InsureCert Systems Inc., renamed 2026-10-03), used only in lockup small print and legal contexts.
 - Never use em dashes or quotation marks in any copy.
 - Palette, type, radii and motion follow `~/Projects/insurecert-v2/STYLE_GUIDE.md`. The Slypway wordmark artwork is pending; do not invent one.
 

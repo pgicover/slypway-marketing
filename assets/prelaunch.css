@@ -147,22 +147,34 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
+  flex-wrap: wrap;
+  gap: 12px 24px;
   padding: 18px clamp(20px, 4vw, 48px);
 }
 
 .sw-wordmark {
-  font-family: var(--font-heading);
-  font-weight: 600;
-  font-size: 35px;
+  display: inline-flex;
+  align-items: center;
   line-height: 1;
-  color: var(--sw-fg);
+}
+
+.sw-wordmark-img {
+  display: block;
+  height: 48px;
+  width: auto;
+}
+
+html[data-theme="light"] .sw-wordmark-img[data-theme-img="dark"],
+html[data-theme="dark"] .sw-wordmark-img[data-theme-img="light"] {
+  display: none;
 }
 
 .sw-header-right {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 20px;
+  margin-left: auto;
 }
 
 .sw-back {
@@ -189,6 +201,10 @@ textarea {
   font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+}
+
+.sw-header > .sw-toggle {
+  margin-left: auto;
 }
 
 .sw-toggle button {
@@ -578,9 +594,5 @@ textarea.sw-field-box {
 @media (max-width: 480px) {
   .sw-card {
     padding: 24px;
-  }
-
-  .sw-wordmark {
-    font-size: clamp(26px, 8vw, 35px);
   }
 }

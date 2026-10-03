@@ -24,7 +24,8 @@ a:hover{color:inherit}
 .mono-label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase}
 
 header.site-header{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:26px clamp(24px,6vw,80px);border-bottom:1px solid rgba(244,242,238,.14)}
-.logo{font-family:'Hanken Grotesk',sans-serif;font-weight:800;font-size:20px;letter-spacing:-.03em}
+.logo{display:inline-flex;align-items:center}
+.logo img{height:48px;width:auto;display:block}
 .site-nav{display:flex;align-items:center;gap:clamp(16px,2.4vw,32px)}
 .site-nav a{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase;opacity:.6;transition:opacity .25s ease}
 .site-nav a:hover,.site-nav a[aria-current="page"]{opacity:1}
@@ -117,7 +118,7 @@ footer.site-footer{display:flex;align-items:center;height:80px;padding:0 clamp(2
 </head>
 <body class="no-js">
 <header class="site-header">
-<a class="logo" href="./index.html">Slypway</a>
+<a class="logo" href="./index.html" aria-label="Slypway"><img src="./assets/brand/slypway-brand-white.svg" alt="" aria-hidden="true" width="540" height="130"></a>
 <nav class="site-nav" aria-label="Primary">
 <a href="/how-it-works.html">How it works</a>
 <a href="/pricing.html" aria-current="page">Pricing</a>
@@ -283,7 +284,7 @@ footer.site-footer{display:flex;align-items:center;height:80px;padding:0 clamp(2
 
 <div class="faq-item">
 <h3>Who bills me?</h3>
-<p>InsureCert Systems Inc. handles billing for Slypway. Charges on your card or invoice will show InsureCert Systems Inc.</p>
+<p>Slypway Inc. handles billing for Slypway. Charges on your card or invoice will show Slypway Inc.</p>
 </div>
 
 <div class="faq-item">
@@ -301,7 +302,7 @@ footer.site-footer{display:flex;align-items:center;height:80px;padding:0 clamp(2
 </section>
 
 <div class="fine-print">
-<p>InsureCert Systems Inc. handles billing for Slypway. Prices are in USD and exclude applicable taxes.</p>
+<p>Slypway Inc. handles billing for Slypway. Prices are in USD and exclude applicable taxes.</p>
 </div>
 
 </div>

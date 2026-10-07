@@ -1,0 +1,2 @@
+// Slypway visit beacon, see functions/api/visit.js. Session storage only.
+(function(){addEventListener('load',function(){setTimeout(function(){try{if(document.hidden||navigator.webdriver===true||(navigator.connection&&navigator.connection.saveData))return;try{if(sessionStorage.getItem('sw_v'))return;sessionStorage.setItem('sw_v','1')}catch(e){}fetch('/api/visit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({page:location.pathname,referrer:document.referrer}),keepalive:true}).catch(function(){})}catch(e){}},2000)})})();

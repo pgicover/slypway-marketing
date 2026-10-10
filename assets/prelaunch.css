@@ -164,6 +164,11 @@ textarea {
   width: auto;
 }
 
+/* Text-only wordmark (home page): same lettering size as the old lockup */
+.sw-wordmark-img[src*="slypway-wordmark-"] {
+  height: 30px;
+}
+
 html[data-theme="light"] .sw-wordmark-img[data-theme-img="dark"],
 html[data-theme="dark"] .sw-wordmark-img[data-theme-img="light"] {
   display: none;

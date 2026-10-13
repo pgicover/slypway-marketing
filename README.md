@@ -1,5 +1,10 @@
 # Slypway Marketing - Coming Soon
 
+> Placeholder guard: before any deploy run `node scripts/check-no-placeholders.mjs`
+> (also `npm run check`; `npm run deploy` runs it first). It exits non-zero if any
+> deployable file contains a bracketed draft note such as a Gap, TODO, TBD or
+> Placeholder marker. Never publish one.
+
 Coming soon landing page for slypway.com with a video hero and an email
 signup captured into Cloudflare D1.
 

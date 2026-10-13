@@ -1,0 +1,9 @@
+{
+  "name": "slypway-marketing",
+  "private": true,
+  "scripts": {
+    "check": "node scripts/check-no-placeholders.mjs",
+    "predeploy": "node scripts/check-no-placeholders.mjs",
+    "deploy": "wrangler pages deploy . --project-name slypway-marketing --branch main --commit-dirty=true"
+  }
+}

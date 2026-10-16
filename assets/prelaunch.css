@@ -143,7 +143,7 @@ textarea {
 /* Header */
 .sw-header {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -495,14 +495,14 @@ textarea.sw-field-box {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: 0;
+  z-index: -1;
   pointer-events: none;
 }
 
 .sw-veil {
   position: fixed;
   inset: 0;
-  z-index: 0;
+  z-index: -1;
   background: var(--sw-veil);
   pointer-events: none;
 }
@@ -528,6 +528,13 @@ textarea.sw-field-box {
   line-height: 1.08;
   letter-spacing: -0.03em;
   color: var(--sw-fg);
+}
+
+.sw-h1--wrap {
+  max-width: 30ch;
+  white-space: normal;
+  text-wrap: balance;
+  font-size: clamp(1.75rem, 5.3vw, 2.5rem);
 }
 
 .sw-lead {
@@ -600,5 +607,44 @@ textarea.sw-field-box {
 @media (max-width: 480px) {
   .sw-card {
     padding: 24px;
+  }
+}
+
+/* Tablet and mobile (1080px and narrower): the hero video sits inline between
+   the h1 and the lead, full width of the content column. The file is a 9:16
+   frame with the 1280x676 footage letterboxed in the middle (800px black above
+   and below), so the frame crops to the footage: width 107% so the 16:9 box is
+   filled, centred vertically. Wider than 1080px keeps the fixed backdrop. */
+.sw-hero-frame {
+  display: contents;
+}
+
+@media (max-width: 1080px) {
+  .sw-hero-frame {
+    display: block;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    margin-top: 24px;
+    overflow: hidden;
+    border-radius: 18px;
+  }
+
+  .sw-hero-video {
+    position: absolute;
+    inset: auto;
+    z-index: auto;
+    top: 50%;
+    left: -3.5%;
+    width: 107%;
+    height: auto;
+    transform: translateY(-50%);
+  }
+
+  /* Same veil as desktop (same colour var), clipped to the frame. */
+  .sw-veil {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
   }
 }
